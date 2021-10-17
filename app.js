@@ -21,11 +21,23 @@ const cursoSchema = new mongoose.Schema({
 // Creamos el modelo, que utilizará el schema cursoSchema.
 const Curso = mongoose.model('Curso', cursoSchema);
 
-// Creamos una instancia (objeto) de Curso.
-const curso = new Curso({
-    nombre: 'JavaScript',
-    autor: 'Damián',
-    etiquetas: ['desarrollo web', 'front end'],
-    publicado: true
+// Creamos una función asíncrona para poder guardar el objeto dentro de la BD con un tiempo de espera await.
+async function crearCurso(){
+    // Creamos una instancia (objeto) de Curso.
+    const curso = new Curso({
+        nombre: 'Angular',
+        autor: 'Rocío',
+        etiquetas: ['desarrollo web', 'front end'],
+        publicado: true
+    });
 
-});
+    // Guardamos el objeto dentro de la BD (debemos indicarle una espera con await, ya que no sabemos cuánto puede tardar en ejecutarse el guardado, de esta manera la app no se cuelga.)
+    // El guardado retorna un resultado que es la respuesta del servidor con el documento que se crea en ese moemtno en la BD.
+    const resultado = await curso.save();
+
+    // Mostramos el documento.
+    console.log(resultado);
+};
+
+// Llamamos a la función crearCurso() para que se ejecute y se cree el documento en la BD.
+crearCurso();
