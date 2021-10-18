@@ -21,7 +21,7 @@ const cursoSchema = new mongoose.Schema({
 // Creamos el modelo, que utilizará el schema cursoSchema.
 const Curso = mongoose.model('Curso', cursoSchema);
 
-// Creamos una función asíncrona para poder guardar el objeto dentro de la BD con un tiempo de espera await.
+// Creamos una función asíncrona para poder guardar el objeto (documento) dentro de la BD con un tiempo de espera await.
 async function crearCurso(){
     // Creamos una instancia (objeto) de Curso.
     const curso = new Curso({
@@ -39,5 +39,22 @@ async function crearCurso(){
     console.log(resultado);
 };
 
+// Creamos otra función asíncrona para poder consultar el objeto (documento) que está guardado dentro de la BD con un tiempo de espera await.
+async function listarCursos(){
+    // Creamos una instancia (objeto) que va a ser igual a la respuesta que tengamos del modelo Curso a través de su método find().
+    const cursos = await Curso
+        .find({publicado: true}) // Podemos filtrar por campo.
+        .limit(10) // Podemos limitar a 10 documentos.
+        .sort({autor: -1}) // Podemos orden por autor. 1 significa ordenamiento asc. -1 es desc.
+        .select({nombre: 1, etiquetas: 1}); // Muestra solo campos específicos.
+
+    // Mostramos los documentos.
+    console.log(cursos);
+    
+};
+
 // Llamamos a la función crearCurso() para que se ejecute y se cree el documento en la BD.
-crearCurso();
+//crearCurso();
+
+// Llamamos a la función listarCursos() para que se ejecute y se consulten los documentos de la BD.
+listarCursos();
