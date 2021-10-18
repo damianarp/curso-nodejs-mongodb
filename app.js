@@ -43,6 +43,23 @@ async function crearCurso(){
 async function listarCursos(){
     // Creamos una instancia (objeto) que va a ser igual a la respuesta que tengamos del modelo Curso a través de su método find().
     const cursos = await Curso
+
+        // OPERADORES DE COMPARACIÓN
+        // eq (equal, igual)
+        // ne (not equal, no igual)
+        // gt (greater than, mayor que)
+        // gte (greater than or equal to, mayor o igual que)
+        // lt (less than, menor que)
+        // lte (less than or equal to, menor o igual que)
+        // in (indica si hay valores dentro de una consulta)
+        // nin (not in, contrario a in)
+
+        // Ejemplos:
+        // .find({precio: {$gte: 10, $lte: 30}}) // Precio entre 10 y 30. '$' indica parámetro.
+        // .find({precio: {$in: [10, 15, 25]}}) // Muestra precios específicos (10, 15 y 25).
+
+
+
         .find({publicado: true}) // Podemos filtrar por campo.
         .limit(10) // Podemos limitar a 10 documentos.
         .sort({autor: -1}) // Podemos orden por autor. 1 significa ordenamiento asc. -1 es desc.
