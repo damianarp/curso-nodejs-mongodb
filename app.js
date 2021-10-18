@@ -135,12 +135,24 @@ async function actualizarCurso(id) {
     // FORMA 2 PARA ACTUALIZAR UN DOCUMENTO.
     // Definimos una constante resultado como instancia de Curso que espera una actualización de un documento a través del método updateOne(), anteriormente se usaba update(), pero ahora ya no se usa más (deprecated).
     // El primer parámetro corresponde a la condición por la cuál vamos a hacer la actualización (a través del id), el segundo parámetro corresponde al/los operador/es que queremos actualizar.
-    const resultado = await Curso.updateOne({_id: id}, {
+    // const resultado = await Curso.updateOne({_id: id}, {
+    //     $set: {
+    //         autor: 'Lucía',
+    //         publicado: true
+    //     }
+    // });
+
+    // // Mostramos el documento.
+    // console.log(resultado);
+
+    // FORMA 3 PARA ACTUALIZAR UN DOCUMENTO.
+    // Consiste en seleccionar y actualizar el documento de una sola vez con el método findByIdAndUpdate().
+    const resultado = await Curso.findByIdAndUpdate(id, {
         $set: {
-            autor: 'Lucía',
+            autor: 'Pamela',
             publicado: true
         }
-    });
+    }, {new: true}); // Para que muestre el resultado actualizado cuando se haga el console.log(resultado).
 
     // Mostramos el documento.
     console.log(resultado);
