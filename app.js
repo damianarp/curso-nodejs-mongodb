@@ -103,19 +103,20 @@ async function listarCursos(){
 
 // Creamos otra función asíncrona para poder actualizar el documento (objeto) que está guardado dentro de la BD. Requiere de un id para saber cuál documento debemos actualizar.
 async function actualizarCurso(id) {
+    // FORMA 1 PARA ACTUALIZAR UN DOCUMENTO.
     // Definimos una constante que recibe el documento que queremos actualizar utilizando el método findById().
     // Al hacer la selección del documento, nos devuelve una promesa, por lo que tenemos que manejarla con await para que quede en espera.
-    const curso = await Curso.findById(id);
+    // const curso = await Curso.findById(id);
 
     // Validamos si existe o no el documento en nuestra BD.
-    if(!curso) {
-        console.log('El curso no existe');
-        return;
-    }
+    // if(!curso) {
+    //     console.log('El curso no existe');
+    //     return;
+    // }
 
     // Actualizamos la info del documento
-    curso.publicado = false;
-    curso.autor = 'Pablo';
+    // curso.publicado = false;
+    // curso.autor = 'Pablo';
 
     // Otra forma de actualizar la info del documento es a través del método set().
     // curso.set({
@@ -125,7 +126,21 @@ async function actualizarCurso(id) {
 
     // Guardamos el documento actualizado dentro de la BD (debemos indicarle una espera con await, ya que no sabemos cuánto puede tardar en ejecutarse el guardado, de esta manera la app no se cuelga.)
     // El guardado retorna un resultado que es la respuesta del servidor con el documento que se actualizó en ese momento en la BD.
-    const resultado = await curso.save();
+    // const resultado = await curso.save();
+
+    // Mostramos el documento.
+    // console.log(resultado);
+
+
+    // FORMA 2 PARA ACTUALIZAR UN DOCUMENTO.
+    // Definimos una constante resultado como instancia de Curso que espera una actualización de un documento a través del método updateOne(), anteriormente se usaba update(), pero ahora ya no se usa más (deprecated).
+    // El primer parámetro corresponde a la condición por la cuál vamos a hacer la actualización (a través del id), el segundo parámetro corresponde al/los operador/es que queremos actualizar.
+    const resultado = await Curso.updateOne({_id: id}, {
+        $set: {
+            autor: 'Lucía',
+            publicado: true
+        }
+    });
 
     // Mostramos el documento.
     console.log(resultado);
