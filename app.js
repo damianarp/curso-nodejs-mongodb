@@ -21,6 +21,14 @@ const cursoSchema = new mongoose.Schema({
 // Creamos el modelo, que utilizará el schema cursoSchema.
 const Curso = mongoose.model('Curso', cursoSchema);
 
+////////// PAGINACIÓN //////////
+// Creamos una constante para el numero de páginas y otra para la cantidad de documentos por página.
+const pageNumber = 2;
+const pageSize = 10;
+// Esto debe venir como parámetro en la ruta de la app, por ejemplo:
+// api/cursos?pageNumber=2&pageSize=10
+
+////////// FUNCIONES //////////
 // Creamos una función asíncrona para poder guardar el objeto (documento) dentro de la BD con un tiempo de espera await.
 async function crearCurso(){
     // Creamos una instancia (objeto) de Curso.
@@ -84,17 +92,14 @@ async function listarCursos(){
         // Cuando un campo tiene un contenido específico 'amiá'.
         // .find({autor: /.*amiá.*/ })
 
-
-
-
         .find({publicado: true}) // Podemos filtrar por campo.
-        .limit(10) // Podemos limitar a 10 documentos.
+        .skip((pageNumber - 1) * pageSize) // Paginación.
+        .limit(pageSize) // Podemos limitar la cantidad de documentos según el pageSize.
         .sort({autor: -1}) // Podemos orden por autor. 1 significa ordenamiento asc. -1 es desc.
         .select({nombre: 1, etiquetas: 1}); // Muestra solo campos específicos.
 
     // Mostramos los documentos.
     console.log(cursos);
-    
 };
 
 // Llamamos a la función crearCurso() para que se ejecute y se cree el documento en la BD.
