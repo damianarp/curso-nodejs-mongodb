@@ -24,7 +24,7 @@ const Curso = mongoose.model('Curso', cursoSchema);
 ////////// PAGINACIÓN //////////
 // Creamos una constante para el numero de páginas y otra para la cantidad de documentos por página.
 const pageNumber = 2;
-const pageSize = 10;
+const pageSize = 5;
 // Esto debe venir como parámetro en la ruta de la app, por ejemplo:
 // api/cursos?pageNumber=2&pageSize=10
 
@@ -33,9 +33,9 @@ const pageSize = 10;
 async function crearCurso(){
     // Creamos una instancia (objeto) de Curso.
     const curso = new Curso({
-        nombre: 'Angular',
-        autor: 'Rocío',
-        etiquetas: ['desarrollo web', 'front end'],
+        nombre: 'MongoDB',
+        autor: 'Ramiro',
+        etiquetas: ['desarrollo web', 'data base'],
         publicado: true
     });
 
@@ -51,6 +51,11 @@ async function crearCurso(){
 async function listarCursos(){
     // Creamos una instancia (objeto) que va a ser igual a la respuesta que tengamos del modelo Curso a través de su método find().
     const cursos = await Curso
+        .find({publicado: true}) // Podemos filtrar por campo.
+        .skip((pageNumber - 1) * pageSize) // Paginación.
+        .limit(pageSize) // Podemos limitar la cantidad de documentos según el pageSize.
+        .sort({autor: -1}) // Podemos orden por autor. 1 significa ordenamiento asc. -1 es desc.
+        .select({nombre: 1, etiquetas: 1}); // Muestra solo campos específicos.
 
         ////////// OPERADORES DE COMPARACIÓN //////////
         // eq (equal, igual)
@@ -92,18 +97,12 @@ async function listarCursos(){
         // Cuando un campo tiene un contenido específico 'amiá'.
         // .find({autor: /.*amiá.*/ })
 
-        .find({publicado: true}) // Podemos filtrar por campo.
-        .skip((pageNumber - 1) * pageSize) // Paginación.
-        .limit(pageSize) // Podemos limitar la cantidad de documentos según el pageSize.
-        .sort({autor: -1}) // Podemos orden por autor. 1 significa ordenamiento asc. -1 es desc.
-        .select({nombre: 1, etiquetas: 1}); // Muestra solo campos específicos.
-
     // Mostramos los documentos.
     console.log(cursos);
 };
 
 // Llamamos a la función crearCurso() para que se ejecute y se cree el documento en la BD.
-//crearCurso();
+// crearCurso();
 
 // Llamamos a la función listarCursos() para que se ejecute y se consulten los documentos de la BD.
 listarCursos();
