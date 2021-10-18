@@ -1,11 +1,15 @@
-// Impoprtaciones necesarias
+// Importaciones necesarias.
 const mongoose = require('mongoose');
 
+
+////////// CONEXIÓN A MONGODB //////////
 // Conexión a Mongoose (no olvidar que esta conexión es una promesa.)
 mongoose.connect('mongodb://localhost:27017/demo')
     .then(() => console.log('Conectado a MongoDB...'))
     .catch(err => console.log('No se pudo conectar con MongoDB', err));
 
+
+////////// CONFIGURACIÓN DEL DOCUMENTO //////////
 // Creamos un schema para definir la estructura del documento dentro de la colección en la BD.
 const cursoSchema = new mongoose.Schema({
     nombre      : String,
@@ -21,6 +25,7 @@ const cursoSchema = new mongoose.Schema({
 // Creamos el modelo, que utilizará el schema cursoSchema.
 const Curso = mongoose.model('Curso', cursoSchema);
 
+
 ////////// PAGINACIÓN //////////
 // Creamos una constante para el número de páginas y otra para la cantidad de documentos por página.
 const pageNumber = 2;
@@ -28,7 +33,9 @@ const pageSize = 5;
 // Esto debe venir como parámetro en la ruta de la app, por ejemplo:
 // api/cursos?pageNumber=2&pageSize=10
 
-////////// FUNCIONES //////////
+
+////////// FUNCIONES CRUD //////////
+// CREAR DOCUMENTO.
 // Creamos una función asíncrona para poder guardar el documento (objeto) dentro de la BD.
 async function crearCurso(){
     // Creamos una instancia (documento) de Curso.
@@ -47,6 +54,7 @@ async function crearCurso(){
     console.log(resultado);
 };
 
+// LISTAR DOCUMENTOS.
 // Creamos otra función asíncrona para poder consultar el documento (objeto) que está guardado dentro de la BD.
 async function listarCursos(){
     // Creamos una instancia (objeto) que va a ser igual a la respuesta que tengamos del modelo Curso a través de su método find(). Nos devuelve una promesa, por lo que tenemos que manejarla con await para que quede en espera.
@@ -101,6 +109,7 @@ async function listarCursos(){
     console.log(cursos);
 };
 
+// ACTUALIZAR DOCUMENTO.
 // Creamos otra función asíncrona para poder actualizar el documento (objeto) que está guardado dentro de la BD. Requiere de un id para saber cuál documento debemos actualizar.
 async function actualizarCurso(id) {
     // FORMA 1 PARA ACTUALIZAR UN DOCUMENTO.
@@ -158,6 +167,23 @@ async function actualizarCurso(id) {
     console.log(resultado);
 }
 
+// ELIMINAR DOCUMENTO.
+// Creamos otra función asíncrona para poder eliminar el documento (objeto) que está guardado dentro de la BD. Requiere de un id para saber cuál documento debemos eliminar.
+async function eliminarCurso(id) {
+    // Esta forma no nos muestra el documento eliminado en el console.log().
+    // Definimos una constante resultado como instancia de Curso que espera una eliminación de un documento, a través del método deleteOne().
+    // const result = await Curso.deleteOne({_id: id});
+    // console.log(result);
+
+    // Otra forma de eliminar un documento es mediante el método findByIdAndDelete().
+    // Esta forma nos muestra el documento eliminado en el console.log().
+    const resultado = await Curso.findByIdAndDelete(id);
+    console.log(resultado);
+}
+
+
+////////// LLAMADA A LAS FUNCIONES CRUD //////////
+
 // Llamamos a la función crearCurso() para que se ejecute y se cree el documento en la BD.
 // crearCurso();
 
@@ -165,4 +191,7 @@ async function actualizarCurso(id) {
 // listarCursos();
 
 // Llamamos a la función actualizarCurso() para que se ejecute y se actualicen los documentos de la BD.
-actualizarCurso('616ca9d03c2ce960e0a9ef41'); // El id lo obtenemos del documento guardado en Robo 3T.
+// actualizarCurso('616ca9d03c2ce960e0a9ef41'); // El id lo obtenemos del documento guardado en Robo 3T.
+
+// Llamamos a la función eliminarCurso() para que se ejecute y se elimine el documento de la BD.
+// eliminarCurso('616ce814eb657f8b811ee749');
