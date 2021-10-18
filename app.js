@@ -44,7 +44,7 @@ async function listarCursos(){
     // Creamos una instancia (objeto) que va a ser igual a la respuesta que tengamos del modelo Curso a través de su método find().
     const cursos = await Curso
 
-        // OPERADORES DE COMPARACIÓN
+        ////////// OPERADORES DE COMPARACIÓN //////////
         // eq (equal, igual)
         // ne (not equal, no igual)
         // gt (greater than, mayor que)
@@ -57,6 +57,33 @@ async function listarCursos(){
         // Ejemplos:
         // .find({precio: {$gte: 10, $lte: 30}}) // Precio entre 10 y 30. '$' indica parámetro.
         // .find({precio: {$in: [10, 15, 25]}}) // Muestra precios específicos (10, 15 y 25).
+
+        ////////// OPERADORES LÓGICOS //////////
+        // and
+        // or
+
+        // Ejemplos:
+        // AND
+        // .find().and([{autor: 'Rocío'}, {publicado: true}]) // Primera condición -> autor: Rocío y Segunda condición -> publicado: true.
+        // También se puede escribir como:
+        // .find({autor: 'Rocío'}, {publicado: true})
+
+        // OR
+        // .find().or([{autor: 'Rocío'}, {publicado: true}]) // Primera condición -> autor: Rocío ó Segunda condición -> publicado: true.
+
+        ////////// EXPRESIONES REGULARES //////////
+        // Se aplican en campos que tengan valores de tipo String.
+
+        // Ejemplos:
+        // Comienza con la palabra 'desa'.
+        // .find({etiquetas: /^desa/ })
+
+        // Termina con la palabra 'ular'.
+        // .find({nombre: /ular$/ })
+
+        // Cuando un campo tiene un contenido específico 'amiá'.
+        // .find({autor: /.*amiá.*/ })
+
 
 
 
