@@ -15,23 +15,23 @@ const cursoSchema = new mongoose.Schema({
     publicado   : Boolean
 });
 
-// En POO: Clase -> Objeto.
-// En MongoDB: Schema -> Modelo.
+// En POO: Clase -> objeto.
+// En MongoDB: schema -> Modelo -> documento (u objeto).
 
 // Creamos el modelo, que utilizará el schema cursoSchema.
 const Curso = mongoose.model('Curso', cursoSchema);
 
 ////////// PAGINACIÓN //////////
-// Creamos una constante para el numero de páginas y otra para la cantidad de documentos por página.
+// Creamos una constante para el número de páginas y otra para la cantidad de documentos por página.
 const pageNumber = 2;
 const pageSize = 5;
 // Esto debe venir como parámetro en la ruta de la app, por ejemplo:
 // api/cursos?pageNumber=2&pageSize=10
 
 ////////// FUNCIONES //////////
-// Creamos una función asíncrona para poder guardar el objeto (documento) dentro de la BD con un tiempo de espera await.
+// Creamos una función asíncrona para poder guardar el documento (objeto) dentro de la BD.
 async function crearCurso(){
-    // Creamos una instancia (objeto) de Curso.
+    // Creamos una instancia (documento) de Curso.
     const curso = new Curso({
         nombre: 'MongoDB',
         autor: 'Ramiro',
@@ -39,17 +39,17 @@ async function crearCurso(){
         publicado: true
     });
 
-    // Guardamos el objeto dentro de la BD (debemos indicarle una espera con await, ya que no sabemos cuánto puede tardar en ejecutarse el guardado, de esta manera la app no se cuelga.)
-    // El guardado retorna un resultado que es la respuesta del servidor con el documento que se crea en ese moemtno en la BD.
+    // Guardamos el documento dentro de la BD (debemos indicarle una espera con await, ya que no sabemos cuánto puede tardar en ejecutarse el guardado, de esta manera la app no se cuelga.)
+    // El guardado retorna un resultado que es la respuesta del servidor con el documento que se crea en ese momento en la BD.
     const resultado = await curso.save();
 
     // Mostramos el documento.
     console.log(resultado);
 };
 
-// Creamos otra función asíncrona para poder consultar el objeto (documento) que está guardado dentro de la BD con un tiempo de espera await.
+// Creamos otra función asíncrona para poder consultar el documento (objeto) que está guardado dentro de la BD.
 async function listarCursos(){
-    // Creamos una instancia (objeto) que va a ser igual a la respuesta que tengamos del modelo Curso a través de su método find().
+    // Creamos una instancia (objeto) que va a ser igual a la respuesta que tengamos del modelo Curso a través de su método find(). Nos devuelve una promesa, por lo que tenemos que manejarla con await para que quede en espera.
     const cursos = await Curso
         .find({publicado: true}) // Podemos filtrar por campo.
         .skip((pageNumber - 1) * pageSize) // Paginación.
@@ -101,8 +101,41 @@ async function listarCursos(){
     console.log(cursos);
 };
 
+// Creamos otra función asíncrona para poder actualizar el documento (objeto) que está guardado dentro de la BD. Requiere de un id para saber cuál documento debemos actualizar.
+async function actualizarCurso(id) {
+    // Definimos una constante que recibe el documento que queremos actualizar utilizando el método findById().
+    // Al hacer la selección del documento, nos devuelve una promesa, por lo que tenemos que manejarla con await para que quede en espera.
+    const curso = await Curso.findById(id);
+
+    // Validamos si existe o no el documento en nuestra BD.
+    if(!curso) {
+        console.log('El curso no existe');
+        return;
+    }
+
+    // Actualizamos la info del documento
+    curso.publicado = false;
+    curso.autor = 'Pablo';
+
+    // Otra forma de actualizar la info del documento es a través del método set().
+    // curso.set({
+    //     publicado: false,
+    //     autor: 'Pablo'
+    // });
+
+    // Guardamos el documento actualizado dentro de la BD (debemos indicarle una espera con await, ya que no sabemos cuánto puede tardar en ejecutarse el guardado, de esta manera la app no se cuelga.)
+    // El guardado retorna un resultado que es la respuesta del servidor con el documento que se actualizó en ese momento en la BD.
+    const resultado = await curso.save();
+
+    // Mostramos el documento.
+    console.log(resultado);
+}
+
 // Llamamos a la función crearCurso() para que se ejecute y se cree el documento en la BD.
 // crearCurso();
 
 // Llamamos a la función listarCursos() para que se ejecute y se consulten los documentos de la BD.
-listarCursos();
+// listarCursos();
+
+// Llamamos a la función actualizarCurso() para que se ejecute y se actualicen los documentos de la BD.
+actualizarCurso('616ca9d03c2ce960e0a9ef41'); // El id lo obtenemos del documento guardado en Robo 3T.
